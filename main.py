@@ -19,28 +19,35 @@ def on_window_closing(window):
 
 
 def on_ctrl_press(key):
-    if key == Key.ctrl:
-        print("Press")
-    else:
-        print(Key.ctrl)
+    pass
+    # if key == Key.ctrl:
+    #     print("Press")
+    # else:
+    #     print(Key.ctrl)
 
 
 def on_ctrl_release(key):
-    if key == Key.ctrl:
-        print("Release")
-    else:
-        print(Key.ctrl)
+    pass
+    # if key == Key.ctrl:
+    #     print("Release")
+    # else:
+    #     print(Key.ctrl)
 
 
 def on_open(textfield):
-    # print(filedialog.askopenfilename(initialdir="/", title="Open file",
-    #                                  filetypes=(("Python files", "*.py;*.pyw"), ("All files", "*.*"))))
-    print(textfield.get(1.0, END))
+    filepath = filedialog.askopenfilename(initialdir="/", title="Open file",
+                                          filetypes=(("Python files", "*.py;*.pyw"), ("All files", "*.*")))
+    if filepath != ():
+        with open(filepath) as outfile:
+            textfield.insert(INSERT, outfile.read())
 
 
-def on_save():
-    print(filedialog.asksaveasfilename(initialdir="/", title="Save as",
-                                       filetypes=(("Python files", "*.py;*.pyw"), ("All files", "*.*"))))
+def on_save(textfield):
+    filepath = filedialog.asksaveasfilename(initialdir="/", title="Save as",
+                                            filetypes=(("Python files", "*.py;*.pyw"), ("All files", "*.*")))
+    if filepath != ():
+        with open(filepath, 'w') as outfile:
+            outfile.write(textfield.get(1.0, END))
 
 
 def add_separator(event, textfield):
@@ -83,7 +90,7 @@ def main():
     textfield.bind('<KeyRelease>', lambda event: add_separator(event, textfield))
 
     filemenu.add_command(label="Open", command=lambda: on_open(textfield))
-    filemenu.add_command(label="Save", command=on_save)
+    filemenu.add_command(label="Save", command=lambda: on_save(textfield))
     filemenu.add_command(label="Exit", command=window.quit)
 
     window.protocol("WM_DELETE_WINDOW", lambda: on_window_closing(window))
