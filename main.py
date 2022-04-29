@@ -1,8 +1,15 @@
 from tkinter import *
 from tkinter import scrolledtext
 from tkinter import filedialog
+from tkinter import messagebox
 from pynput import keyboard
 from pynput.keyboard import Key
+import platform
+
+
+def on_window_closing(window):
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        window.destroy()
 
 # here are all the attrebutes of pynput.keyboard.Key
 # [   'alt', 'backspace', 'cmd', 'ctrl', 'delete', 'down', 'end', 'enter',
@@ -43,10 +50,15 @@ def add_separator(event, textfield):
 def main():
     # with keyboard.Listener(on_press=on_ctrl_press, on_release=on_ctrl_release) as listener:
     #     listener.join()
+    current_os = platform.system()
 
     window = Tk()
     window.title("Micro_IDE")
-    window.geometry('400x250')
+    window.geometry('900x480')
+    if current_os == "Linux":
+        window.attributes('-zoomed', True)
+    else:
+        window.attributes('-fullscreen', True)
     """ Menu """
     menubar = Menu(window)
 
@@ -73,6 +85,8 @@ def main():
     filemenu.add_command(label="Open", command=lambda: on_open(textfield))
     filemenu.add_command(label="Save", command=on_save)
     filemenu.add_command(label="Exit", command=window.quit)
+
+    window.protocol("WM_DELETE_WINDOW", lambda: on_window_closing(window))
     window.mainloop()
 
 
